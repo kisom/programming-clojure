@@ -1,1 +1,3 @@
-(ns programming-clojure.core)
+(ns programming-clojure.core
+  (:require programming-clojure.chapter3))
+
