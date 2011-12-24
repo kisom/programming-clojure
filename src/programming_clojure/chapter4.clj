@@ -12,3 +12,20 @@
    (= n 1) 1
    :else (+ (simple-fibo (- n 1))
 	    (simple-fibo (- n 2)))))
+
+(defn tail-fibo [n]
+  (letfn [(fib [current next n]
+            (if (zero? n) current
+                (fib next (+ current next) (dec n))))]
+    (fib 0N 1N n)))
+
+(defn recur-fibo [n]
+  (letfn [(fib [current next n]
+            (if (zero? n) current
+                (recur next (+ current next) (dec n))))]
+    (fib 0N 1N n)))
+
+(defn lazy-fibo
+  ([] (concat [0 1] (lazy-fibo 0N 1N)))
+  ([a b] (let [n (+ a b)]
+           (lazy-seq (cons n (lazy-fibo b n))))))
