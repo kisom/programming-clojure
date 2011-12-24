@@ -22,11 +22,6 @@
   [filename]
   (not (zero? (count (re-seq #"^.+\.clj$" filename)))))
 
-(defn git-metadata?
-  "Returns true if the line starts with .git"
-  [filename]
-  (not (zero? (count (re-seq #"^.git.*$" filename)))))
-
 (defn count-sloc
   "Count the SLOC in a file."
   [filename]
@@ -39,26 +34,28 @@
   "Count the SLOC of all the clojure source files in the current directory."
   ([] (clojure-sloc "."))
   ([source-path]
-  (let [source-path (if (nil? source-path) "." source-path)]
-  (reduce +
-	  (map count-sloc (filter #(not (git-metadata? %))
-	       (filter clojure-source? (map #(.getAbsolutePath %) (file-seq (File. source-path))))))))))
+     (reduce +
+	  (map count-sloc
+	       (filter clojure-source?
+		       (map #(.getAbsolutePath %)
+			    (file-seq (File. source-path))))))))
 
 (defn show-clojure-source-files
   [source-path]
-  (filter #(not (git-metadata? %))
-	  (filter clojure-source?
+  (filter clojure-source?
 		  (map #(.getAbsolutePath %)
-		       (file-seq (File. source-path))))))
+		       (file-seq (File. source-path)))))
   
 
-;(defn project-cost
-;  "Count the COCOMO cost of a project directory."
-;  ([] (project-cost "."))
-;  ([project-path]
-;     (let [ksloc (/ (clojure-sloc project-path) 1000)
-;	   person-months (* 2.4 (exponent ksloc 1.05))
-;	   person-years  (/ person-months 12.0)
-;	   schedule-estimate (* 2.5 (exponent person-months 0.38))
-;	   number-of-developers (/ person-years schedule-estimate)]
-;       (* person-years number-of-developers average-salary 2.4))))
+(defn project-cost
+  "Count the COCOMO cost of a project directory."
+  ([] (project-cost "."))
+  ([project-path]
+     (let [ksloc (/ (clojure-sloc project-path) 1000.0)
+	   person-months (* 2.4 (java.lang.Math/pow ksloc 1.05))
+	   person-years  (/ person-months 12.0)
+	   schedule-estimate (/ (* 2.5 (java.lang.Math/pow person-months 0.38)) 12)
+	   number-of-developers (/ person-years schedule-estimate)
+	   overhead 2.4]
+       (/ (* average-salary number-of-developers) overhead))))
+

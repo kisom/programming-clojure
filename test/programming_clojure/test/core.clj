@@ -21,8 +21,4 @@
   (is (not (clojure-source? (str (gensym)))))
   (is (not (clojure-source? "foo.cljnot"))))
 
-(deftest git-tests
-  (is (git-metadata? ".git/foo"))
-  (is (git-metadata? ".gitignore"))
-  (is (not (git-metadata? "foo.clj"))))
 
