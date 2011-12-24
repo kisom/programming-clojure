@@ -10,9 +10,19 @@
   [coll1 coll2]
   (== (count coll1) (count coll2)))
 
+(defn int?
+  "Returns true if the number is an int."
+  [n]
+  (and
+   (not (coll? n))))
+   
+
 (defn- restr
   [string]
-  (apply str (rest string)))
+  (println "  (restr" string ")")
+  (if (string? string)
+    (apply str (rest string))
+    ""))
 
 (defn- valid-target?
   "Ensures a target string is valid."
@@ -27,12 +37,12 @@
    the string being evaluated."
   [ target source & k ]
   (println (format "target: %s\nsource: %s\n" target source))
-  (when (valid-target? target)
-    (let [x (int (first target))
+  (if (valid-target? target)
+    (do (let [x (int (first target))
           y (int (first source))
           k (if (empty? k) 2 (first k))]
       (reduce +
               (lazy-seq
                (cons (Math/abs (Math/pow (- x y) k))
-                     (fitness (restr target) (restr source) k)))))))
-
+                     (fitness (restr target) (restr source) k))))))
+  0))
