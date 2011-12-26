@@ -77,5 +77,26 @@ should result in two pairs of heads." }
   (comp count filter))
 
 (defn count-runs [n pred coll]
+  "Count runs of length n where pred is true in coll."
   (count-if #(every? pred %)
-             (partition n 1 coll)))
+            (partition n 1 coll)))
+
+;; still have function named count-heads-pairs implemented via count-runs
+(def ^{:doc "Count runs of length two that are both heads." }
+  count-heads-pairs (partial count-runs 2 #(= :h %)))
+
+(defn faux-curry
+  "A simulated curry function using partial application. Unlike a real curry,
+even when all arguments are fixed, this will always return a function."
+  [& args]
+  (apply partial partial args))
+
+(defn add-n
+  "A sample method to add two numbers together to demonstrate currying and
+partial function application."
+  [x y]
+  (+ x y))
+
+;; with real currying, (faux-curry (faux-curry add-n 1) 2) would yield 2
+;; with partial application, to achieve the same, you would have to use
+;;    (((faux-curry add-n 1)) 2)
