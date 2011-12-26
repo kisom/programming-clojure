@@ -100,3 +100,22 @@ partial function application."
 ;; with real currying, (faux-curry (faux-curry add-n 1) 2) would yield 2
 ;; with partial application, to achieve the same, you would have to use
 ;;    (((faux-curry add-n 1)) 2)
+
+;;; shortcutting recursion with memoisation; illustrated with the hofstadter
+;;  sequences.
+;; basis: F(0) <- 1; M(0) <- 0
+;; induction:
+;;     F(n) <- n - M(F(n - 1)); n > 0
+;;     M(n) <- n - F(M(n - 1)); n > 0
+(declare m f)
+(defn m [n]
+  (if (zero? n) 0
+      (- n (f (m (dec n))))))
+(defn f [n]
+  (if (zero? n) 1
+      (- n (m (f (dec n))))))
+
+(def m (memoize m))
+(def f (memoize f))
+(def m-seq (map m (iterate inc 0)))
+(def f-seq (map f (iterate inc 0)))
