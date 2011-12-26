@@ -15,7 +15,7 @@
   [n]
   (and
    (not (coll? n))))
-   
+
 
 (defn- restr
   [string]
@@ -30,7 +30,7 @@
   (not (and
    (== 0 (count target))
    (not (nil? target)))))
-   
+
 
 (defn- fitness
   "Calculate fitness level of two strings. target is the desired string, source is
@@ -45,4 +45,13 @@
               (lazy-seq
                (cons (Math/abs (Math/pow (- x y) k))
                      (fitness (restr target) (restr source) k))))))
-  0))
+    0))
+
+(defn- stevesFitness
+  "How I could calculate fitness"
+  [target source & k]
+  (println (format "target: %s\nsource: %s\n" target source))
+  (let [k (if (empty? k) 2 (first k))]
+    (reduce +
+            (map #(Math/abs (Math/pow (- (int %1) (int %2)) k))
+                 target source))))
