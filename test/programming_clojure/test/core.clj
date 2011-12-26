@@ -1,6 +1,7 @@
 (ns programming-clojure.test.core
   (:use [programming-clojure.core])
   (:use [programming-clojure.chapter3])
+  (:use [programming-clojure.chapter4])
   (:use [clojure.test]))
 
 (deftest blank-tests
@@ -21,4 +22,5 @@
   (is (not (clojure-source? (str (gensym)))))
   (is (not (clojure-source? "foo.cljnot"))))
 
-
+(deftest chapter4-tests
+  (is (= 2 (count-runs 2 #(= :h %) sample-toss))))
