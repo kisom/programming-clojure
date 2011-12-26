@@ -43,5 +43,39 @@
                 [0N 1N])))
 
 
+;;; coin toss and lazier-than-lazy code
 
+(def ^{ :doc "The example sequence used in the book to verify results; 
+should result in two pairs of heads." } 
+     sample-toss [ :h :t :t :h :h :h ]) ; sample-toss is the example sequence
+                                        ; used in the book, used to verify results.
+                                        ; should result in two runs of pairs of heads
 
+(defn coin-toss
+  "Generate a sequence of coin-tosses."
+  [n]
+  (into [] (repeatedly n #(if (= 1 (rand-int 2)) :h :t))))
+
+(defn recur-count-pairs
+  "Recursively find pairs of heads in a run of coin tosses."
+  [coll]
+  (loop [cnt 0 coll coll]
+    (if (empty? coll) cnt
+        (recur (if (= :h (first coll) (second coll))
+                 (inc cnt) cnt)
+               (rest coll)))))
+
+(defn by-pairs
+  "Break sequence into pairs suitable for detecting pairs."
+  [coll]
+  (let [take-pair (fn [c] (when (next c) (take 2 c)))]
+    (lazy-seq
+     (when-let [pair (seq (take-pair coll))]
+       (cons pair (by-pairs (rest coll)))))))
+
+(def ^{ :doc "Count items matching a filter." } count-if
+  (comp count filter))
+
+(defn count-runs [n pred coll]
+  (count-if #(every? pred %)
+             (partition n 1 coll)))
