@@ -1,0 +1,1 @@
+(#programming_clojure.chapter5.Message{:sender "foo", :text "bar baz quux"} #programming_clojure.chapter5.Message{:sender "John Q Public", :text "Zord!"} #programming_clojure.chapter5.Message{:sender "J Random Hacker", :text "lovely spam!"})
